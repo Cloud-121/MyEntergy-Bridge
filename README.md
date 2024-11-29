@@ -1,7 +1,6 @@
-**MyEntergy-HA**
+**MyEntergy-Bridge**
 ================
-
-Home Assistant plugin to pull MyEntergy power usage from "Advance Meters" using [MyEntergy-API](https://github.com/Cloud-121/MyEntergy-API)
+MyEntergy Bridge pulls your energy usage from [MyEntergy-API](https://github.com/Cloud-121/MyEntergy-API) and sends it to your preferred mqtt broker to use with homeassistant.
 
 
 
