@@ -1,0 +1,23 @@
+FROM selenium/standalone-firefox:latest
+
+WORKDIR /app
+
+COPY . /app
+
+ENV MyEntergy-USERNAME=${USERNAME}
+ENV MyEntergy-PASSWORD=${PASSWORD}
+ENV MyEntergy-TIMEOUT=${TIMEOUT}
+ENV MyEntergy-DEBUG=${DEBUG}
+
+ENV mqqt_host=${MQTT_HOST}
+ENV mqqt_port=${MQTT_PORT}
+ENV mqqt_user=${MQTT_USER}
+ENV mqqt_password=${MQTT_PASSWORD}
+ENV mqqt_topic=${MQTT_TOPIC}
+
+
+
+RUN pip install -r requirements.txt
+
+CMD ["python", "run.py", "--username", "${MyEntergy-USERNAME}", "--password", "${MyEntergy-PASSWORD}", "--timeout", "${MyEntergy-TIMEOUT}", "--debug", "${MyEntergy-DEBUG}", "--mqtt_host", "${mqqt_host}", "--mqtt_port", "${mqqt_port}", "--mqtt_user", "${mqqt_user}", "--mqtt_password", "${mqqt_password}", "--mqtt_topic", "${mqqt_topic}"]
+
