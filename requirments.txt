@@ -1,0 +1,5 @@
+selenium
+selenium-recaptcha-solver
+requests
+setuptools
+paho-mqtt

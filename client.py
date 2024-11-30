@@ -1,4 +1,4 @@
-# MyEntergy-API Client 
+# MyEntergy-API Client
 
 def get_current_kwh_usage(username, password):
     # Import required libraries for web automation and interaction
@@ -13,12 +13,17 @@ def get_current_kwh_usage(username, password):
 
     # Define a function to verify the availability of an element on the page
     def is_available(method, text):
+        wait_time = 0
         if method == 'ID':
             while True:
                 try:
                     driver.find_element(By.ID, text).text
                     return True
                 except:
+                    if wait_time > 60:
+                        print('Element not found after 60 seconds.')
+                        break
+                    wait_time += 1
                     time.sleep(1)
         elif method == 'XPATH':
             while True:
@@ -26,7 +31,12 @@ def get_current_kwh_usage(username, password):
                     driver.find_element(By.XPATH, text).text
                     return True
                 except:
+                    if wait_time > 60:
+                        print('Element not found after 60 seconds.')
+                        break
+                    wait_time += 1
                     time.sleep(1)
+
 
     # Define the user agent string for the browser
     test_ua = 'Mozilla/5.0 (Windows NT 4.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36'
@@ -35,7 +45,7 @@ def get_current_kwh_usage(username, password):
     options = Options()
 
     # Uncomment the line below to enable headless mode (useful for running without a GUI)
-    options.headless = True
+    #options.headless = True
     options.set_preference("general.useragent.override", test_ua)
 
     # Disable content sandboxing and extensions for the browser
@@ -98,7 +108,7 @@ def get_current_kwh_usage(username, password):
             get_on_demand_read_button.click()
 
             # Wait for the subsequent page elements to load
-            time.sleep(20)
+            time.sleep(30)
 
         else:
             print('Get On Demand Read is not available')
@@ -118,9 +128,9 @@ def get_current_kwh_usage(username, password):
         current_kwh_usage_raw = driver.find_element(By.XPATH, '/html/body/div[2]/div/div[3]/div[1]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[4]/div[3]/div[1]/div[2]').text
         # Extract numerical data from the text
         current_kwh_usage_month = float(current_kwh_usage_raw.replace(',', '').split()[0])
+        driver.quit()
         return current_kwh_usage_month
     except Exception as e:
         print(e)
 
     # Terminate the WebDriver session
-    driver.quit()
