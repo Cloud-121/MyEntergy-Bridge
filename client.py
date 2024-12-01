@@ -108,7 +108,7 @@ def get_current_kwh_usage(username, password):
             get_on_demand_read_button.click()
 
             # Wait for the subsequent page elements to load
-            time.sleep(30)
+            time.sleep(60)
 
         else:
             print('Get On Demand Read is not available')
@@ -131,6 +131,7 @@ def get_current_kwh_usage(username, password):
         driver.quit()
         return current_kwh_usage_month
     except Exception as e:
+        driver.quit()
         print(e)
 
     # Terminate the WebDriver session
