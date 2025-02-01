@@ -66,13 +66,15 @@ def connect_mqtt():
         print(f"Disconnected from MQTT Broker with result code {rc}")
         handle_reconnect(client)
 
-    client = mqtt_client.Client(args.clientid)  # Updated initialization without specifying API version
+    # Explicitly set the callback_api_version to 2.0 if you're using paho-mqtt 2.0
+    client = mqtt_client.Client(args.clientid, callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
     client.username_pw_set(args.mqtt_user, args.mqtt_password)
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
     client.will_set(f"{args.mqtt_topic}/availability", "offline", retain=True)
     client.connect(args.host, args.mqtt_port, keepalive=60)
     return client
+
 
 
 def handle_reconnect(client):
