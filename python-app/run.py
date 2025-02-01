@@ -66,14 +66,16 @@ def connect_mqtt():
         print(f"Disconnected from MQTT Broker with result code {rc}")
         handle_reconnect(client)
 
-    # Explicitly set the callback_api_version to 2.0 if you're using paho-mqtt 2.0
-    client = mqtt_client.Client(args.clientid, callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
+    # Use keyword argument for client_id to avoid multiple values for callback_api_version
+    client = mqtt_client.Client(client_id=args.clientid,
+                                callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
     client.username_pw_set(args.mqtt_user, args.mqtt_password)
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
     client.will_set(f"{args.mqtt_topic}/availability", "offline", retain=True)
     client.connect(args.host, args.mqtt_port, keepalive=60)
     return client
+
 
 
 
@@ -98,8 +100,9 @@ def handle_reconnect(client):
     exit(1)
 
 def main():
+    #delay for 30 seconds
+    time.sleep(20)
     print("MyEntergy Script with MQTT Support")
-    """Main function to fetch power usage and publish to MQTT."""
     client = connect_mqtt()
     client.loop_start()
 
@@ -162,6 +165,8 @@ def main():
         client.loop_stop()
         client.disconnect()
         print("Cleanly disconnected from MQTT Broker.")
+
+print("Starting MyEntergy Script with MQTT Support")
 
 if __name__ == "__main__":
     main()
