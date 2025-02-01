@@ -66,13 +66,14 @@ def connect_mqtt():
         print(f"Disconnected from MQTT Broker with result code {rc}")
         handle_reconnect(client)
 
-    client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, args.clientid)
+    client = mqtt_client.Client(args.clientid)  # Updated initialization without specifying API version
     client.username_pw_set(args.mqtt_user, args.mqtt_password)
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
     client.will_set(f"{args.mqtt_topic}/availability", "offline", retain=True)
     client.connect(args.host, args.mqtt_port, keepalive=60)
     return client
+
 
 def handle_reconnect(client):
     """Handle MQTT reconnect logic with exponential backoff."""
@@ -95,6 +96,7 @@ def handle_reconnect(client):
     exit(1)
 
 def main():
+    print("MyEntergy Script with MQTT Support")
     """Main function to fetch power usage and publish to MQTT."""
     client = connect_mqtt()
     client.loop_start()

@@ -5,6 +5,7 @@ def get_current_kwh_usage(username, password):
     from selenium_recaptcha_solver import RecaptchaSolver
     from selenium.webdriver.common.by import By
     from selenium import webdriver
+    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
     from selenium.webdriver.firefox.options import Options
     import time
     import sys
@@ -52,8 +53,13 @@ def get_current_kwh_usage(username, password):
     options.set_preference("security.sandbox.content.level", 0)
     options.set_preference("extensions.enabled", False)
 
-    # Initialize the Firefox WebDriver instance
-    driver = webdriver.Firefox(options=options)
+    # Set up the Remote WebDriver to connect to the Selenium server
+    selenium_url = 'http://selenium:4444/wd/hub'  # Replace with your remote Selenium server URL
+    capabilities = DesiredCapabilities.FIREFOX
+    capabilities['moz:firefoxOptions'] = options.to_capabilities()
+
+    # Initialize the remote Firefox WebDriver
+    driver = webdriver.Remote(command_executor=selenium_url, desired_capabilities=capabilities)
 
     # Initialize the RecaptchaSolver for automated CAPTCHA solving
     solver = RecaptchaSolver(driver=driver)
@@ -96,11 +102,11 @@ def get_current_kwh_usage(username, password):
     is_available('XPATH', '/html/body/div[2]/div/div[3]/div[1]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[4]/div[3]/div[1]/div[2]')
 
     # Allow additional time for the page to stabilize after loading
-    time.sleep(5)
+    time.sleep(10)
 
     # Check if the "Get On Demand Read" button is available and functional
     try:
-        get_on_demand_read_button = driver.find_element(By.XPATH, '/html/body/div[2]/div/div[3]/div[1]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[4]/div[3]/div[5]/button[1]')
+        get_on_demand_read_button = driver.find_element(By.XPATH, '/html/body/div[2]/div/div[3]/div[1]/div[2]/div/div/div/div/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[4]/div[3]/div[5]/div[1]/button[1]')
         if get_on_demand_read_button.is_enabled():
             print('Get On Demand Read is available')
             # Scroll to the button and click it

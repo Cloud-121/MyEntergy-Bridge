@@ -2,4 +2,4 @@ selenium
 selenium-recaptcha-solver
 requests
 setuptools
-paho-mqtt
+paho-mqtt>=1.6.1
